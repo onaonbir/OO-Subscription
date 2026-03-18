@@ -1,0 +1,26 @@
+{
+    "name": "app/subscription",
+    "description": "Backend-only subscription management package for Laravel",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "App\\Subscription\\": "src/",
+            "App\\Subscription\\Database\\Factories\\": "database/factories/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Subscription\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "App\\Subscription\\SubscriptionServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
