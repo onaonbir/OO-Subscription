@@ -2,12 +2,13 @@
 
 namespace OnaOnbir\Subscription\Support;
 
-use OnaOnbir\Subscription\Models\Feature;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use OnaOnbir\Subscription\Models\Feature;
 
 class ResetDateCalculator
 {
-    public static function calculate(Model $subscribable, Feature $feature): ?\Carbon\Carbon
+    public static function calculate(Model $subscribable, Feature $feature): ?Carbon
     {
         if (! $feature->resettable) {
             return null;

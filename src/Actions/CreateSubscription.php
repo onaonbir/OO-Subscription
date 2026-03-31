@@ -2,6 +2,7 @@
 
 namespace OnaOnbir\Subscription\Actions;
 
+use Illuminate\Database\Eloquent\Model;
 use OnaOnbir\Subscription\Enums\SubscriptionStatus;
 use OnaOnbir\Subscription\Events\SubscriptionActivated;
 use OnaOnbir\Subscription\Events\SubscriptionCreated;
@@ -10,7 +11,6 @@ use OnaOnbir\Subscription\Models\Plan;
 use OnaOnbir\Subscription\Models\Subscription;
 use OnaOnbir\Subscription\Support\ModelResolver;
 use OnaOnbir\Subscription\Support\PlanSnapshotBuilder;
-use Illuminate\Database\Eloquent\Model;
 
 class CreateSubscription
 {

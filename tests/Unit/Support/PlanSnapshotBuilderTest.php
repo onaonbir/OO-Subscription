@@ -1,7 +1,6 @@
 <?php
 
 use OnaOnbir\Subscription\Enums\BillingInterval;
-use OnaOnbir\Subscription\Enums\FeatureType;
 use OnaOnbir\Subscription\Models\Feature;
 use OnaOnbir\Subscription\Models\Plan;
 use OnaOnbir\Subscription\Support\PlanSnapshotBuilder;

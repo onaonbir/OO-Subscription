@@ -1,15 +1,15 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Support\Facades\Event;
 use OnaOnbir\Subscription\Actions\ChangePlan;
 use OnaOnbir\Subscription\Actions\CreateSubscription;
-use OnaOnbir\Subscription\Enums\BillingInterval;
 use OnaOnbir\Subscription\Enums\SubscriptionStatus;
 use OnaOnbir\Subscription\Events\PlanChanged;
 use OnaOnbir\Subscription\Events\SubscriptionCanceled;
+use OnaOnbir\Subscription\Exceptions\InvalidSubscriptionStateException;
 use OnaOnbir\Subscription\Models\Plan;
 use OnaOnbir\Subscription\Support\PlanSnapshotBuilder;
-use Illuminate\Support\Facades\Event;
 
 beforeEach(function () {
     $this->snapshotBuilder = new PlanSnapshotBuilder;
@@ -96,10 +96,10 @@ it('throws exception when changing plan on canceled subscription', function () {
     $this->subscription->update(['status' => SubscriptionStatus::Canceled, 'canceled_at' => now()]);
 
     $this->changePlanAction->handle($this->subscription, $this->newPlan);
-})->throws(\OnaOnbir\Subscription\Exceptions\InvalidSubscriptionStateException::class, 'Cannot change plan on subscription with status: canceled');
+})->throws(InvalidSubscriptionStateException::class, 'Cannot change plan on subscription with status: canceled');
 
 it('throws exception when changing plan on expired subscription', function () {
     $this->subscription->update(['status' => SubscriptionStatus::Expired]);
 
     $this->changePlanAction->handle($this->subscription, $this->newPlan);
-})->throws(\OnaOnbir\Subscription\Exceptions\InvalidSubscriptionStateException::class, 'Cannot change plan on subscription with status: expired');
+})->throws(InvalidSubscriptionStateException::class, 'Cannot change plan on subscription with status: expired');

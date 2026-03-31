@@ -2,11 +2,11 @@
 
 namespace OnaOnbir\Subscription\Database\Factories;
 
+use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use OnaOnbir\Subscription\Enums\SubscriptionStatus;
 use OnaOnbir\Subscription\Models\Plan;
 use OnaOnbir\Subscription\Models\Subscription;
-use App\Models\User;
-use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends Factory<Subscription>

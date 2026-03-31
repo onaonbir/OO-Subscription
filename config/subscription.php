@@ -1,5 +1,13 @@
 <?php
 
+use OnaOnbir\Subscription\Models\Feature;
+use OnaOnbir\Subscription\Models\FeatureUsage;
+use OnaOnbir\Subscription\Models\Plan;
+use OnaOnbir\Subscription\Models\PlanFeature;
+use OnaOnbir\Subscription\Models\SubscribableFeature;
+use OnaOnbir\Subscription\Models\Subscription;
+use OnaOnbir\Subscription\Models\UsageRecord;
+
 return [
 
     /*
@@ -34,13 +42,13 @@ return [
     |
     */
     'models' => [
-        'plan' => \OnaOnbir\Subscription\Models\Plan::class,
-        'feature' => \OnaOnbir\Subscription\Models\Feature::class,
-        'subscription' => \OnaOnbir\Subscription\Models\Subscription::class,
-        'plan_feature' => \OnaOnbir\Subscription\Models\PlanFeature::class,
-        'subscribable_feature' => \OnaOnbir\Subscription\Models\SubscribableFeature::class,
-        'feature_usage' => \OnaOnbir\Subscription\Models\FeatureUsage::class,
-        'usage_record' => \OnaOnbir\Subscription\Models\UsageRecord::class,
+        'plan' => Plan::class,
+        'feature' => Feature::class,
+        'subscription' => Subscription::class,
+        'plan_feature' => PlanFeature::class,
+        'subscribable_feature' => SubscribableFeature::class,
+        'feature_usage' => FeatureUsage::class,
+        'usage_record' => UsageRecord::class,
     ],
 
     /*

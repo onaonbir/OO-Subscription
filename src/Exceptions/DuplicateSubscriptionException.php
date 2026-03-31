@@ -2,8 +2,8 @@
 
 namespace OnaOnbir\Subscription\Exceptions;
 
-use OnaOnbir\Subscription\Models\Plan;
 use Exception;
+use OnaOnbir\Subscription\Models\Plan;
 
 class DuplicateSubscriptionException extends Exception
 {

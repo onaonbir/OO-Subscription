@@ -2,9 +2,9 @@
 
 namespace OnaOnbir\Subscription\Database\Factories;
 
+use Illuminate\Database\Eloquent\Factories\Factory;
 use OnaOnbir\Subscription\Enums\BillingInterval;
 use OnaOnbir\Subscription\Models\Plan;
-use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends Factory<Plan>

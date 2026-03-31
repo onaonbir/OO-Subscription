@@ -2,9 +2,9 @@
 
 namespace OnaOnbir\Subscription\Database\Factories;
 
+use Illuminate\Database\Eloquent\Factories\Factory;
 use OnaOnbir\Subscription\Enums\FeatureType;
 use OnaOnbir\Subscription\Models\Feature;
-use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends Factory<Feature>

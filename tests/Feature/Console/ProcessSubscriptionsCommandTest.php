@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\User;
-use OnaOnbir\Subscription\Enums\BillingInterval;
+use Illuminate\Support\Facades\Event;
 use OnaOnbir\Subscription\Enums\SubscriptionStatus;
 use OnaOnbir\Subscription\Events\BillingCycleCompleted;
 use OnaOnbir\Subscription\Events\SubscriptionActivated;
@@ -9,9 +9,7 @@ use OnaOnbir\Subscription\Events\SubscriptionCanceled;
 use OnaOnbir\Subscription\Events\SubscriptionExpired;
 use OnaOnbir\Subscription\Models\Feature;
 use OnaOnbir\Subscription\Models\FeatureUsage;
-use OnaOnbir\Subscription\Models\Plan;
 use OnaOnbir\Subscription\Models\Subscription;
-use Illuminate\Support\Facades\Event;
 
 it('expires active subscriptions past ends_at', function () {
     Event::fake();

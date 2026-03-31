@@ -2,12 +2,13 @@
 
 namespace OnaOnbir\Subscription\Models;
 
-use OnaOnbir\Subscription\Enums\BillingInterval;
-use OnaOnbir\Subscription\Support\ModelResolver;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use OnaOnbir\Subscription\Enums\BillingInterval;
+use OnaOnbir\Subscription\Support\ModelResolver;
 
 class SubscribableFeature extends Model
 {
@@ -45,9 +46,9 @@ class SubscribableFeature extends Model
     }
 
     /**
-     * @param  \Illuminate\Database\Eloquent\Builder<static>  $query
+     * @param  Builder<static>  $query
      */
-    public function scopeCurrentlyValid(\Illuminate\Database\Eloquent\Builder $query): void
+    public function scopeCurrentlyValid(Builder $query): void
     {
         $now = now();
         $query->where('valid_from', '<=', $now)

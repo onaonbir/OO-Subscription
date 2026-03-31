@@ -1,13 +1,14 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Support\Facades\Event;
 use OnaOnbir\Subscription\Actions\CancelSubscription;
 use OnaOnbir\Subscription\Actions\CreateSubscription;
 use OnaOnbir\Subscription\Enums\SubscriptionStatus;
 use OnaOnbir\Subscription\Events\SubscriptionCanceled;
+use OnaOnbir\Subscription\Exceptions\InvalidSubscriptionStateException;
 use OnaOnbir\Subscription\Models\Plan;
 use OnaOnbir\Subscription\Support\PlanSnapshotBuilder;
-use Illuminate\Support\Facades\Event;
 
 beforeEach(function () {
     $this->cancelAction = new CancelSubscription;
@@ -59,10 +60,10 @@ it('throws exception when canceling already canceled subscription', function () 
     $this->subscription->update(['status' => SubscriptionStatus::Canceled, 'canceled_at' => now()]);
 
     $this->cancelAction->handle($this->subscription, immediately: true);
-})->throws(\OnaOnbir\Subscription\Exceptions\InvalidSubscriptionStateException::class, 'Cannot cancel subscription with status: canceled');
+})->throws(InvalidSubscriptionStateException::class, 'Cannot cancel subscription with status: canceled');
 
 it('throws exception when canceling expired subscription', function () {
     $this->subscription->update(['status' => SubscriptionStatus::Expired]);
 
     $this->cancelAction->handle($this->subscription, immediately: true);
-})->throws(\OnaOnbir\Subscription\Exceptions\InvalidSubscriptionStateException::class, 'Cannot cancel subscription with status: expired');
+})->throws(InvalidSubscriptionStateException::class, 'Cannot cancel subscription with status: expired');

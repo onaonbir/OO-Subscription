@@ -2,6 +2,7 @@
 
 namespace OnaOnbir\Subscription\Console;
 
+use Illuminate\Console\Command;
 use OnaOnbir\Subscription\Actions\CancelSubscription;
 use OnaOnbir\Subscription\Enums\SubscriptionStatus;
 use OnaOnbir\Subscription\Events\BillingCycleCompleted;
@@ -9,7 +10,6 @@ use OnaOnbir\Subscription\Events\SubscriptionActivated;
 use OnaOnbir\Subscription\Events\SubscriptionExpired;
 use OnaOnbir\Subscription\Support\ModelResolver;
 use OnaOnbir\Subscription\Support\ResetDateCalculator;
-use Illuminate\Console\Command;
 
 class ProcessSubscriptionsCommand extends Command
 {

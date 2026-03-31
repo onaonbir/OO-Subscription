@@ -2,14 +2,14 @@
 
 namespace OnaOnbir\Subscription\Models;
 
-use OnaOnbir\Subscription\Database\Factories\SubscriptionFactory;
-use OnaOnbir\Subscription\Enums\SubscriptionStatus;
-use OnaOnbir\Subscription\Support\ModelResolver;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use OnaOnbir\Subscription\Database\Factories\SubscriptionFactory;
+use OnaOnbir\Subscription\Enums\SubscriptionStatus;
+use OnaOnbir\Subscription\Support\ModelResolver;
 
 class Subscription extends Model
 {

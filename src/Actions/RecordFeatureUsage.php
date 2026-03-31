@@ -2,6 +2,8 @@
 
 namespace OnaOnbir\Subscription\Actions;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use OnaOnbir\Subscription\Enums\FeatureType;
 use OnaOnbir\Subscription\Events\BillingCycleCompleted;
 use OnaOnbir\Subscription\Events\FeatureLimitReached;
@@ -12,8 +14,6 @@ use OnaOnbir\Subscription\Models\FeatureUsage;
 use OnaOnbir\Subscription\Support\FeatureLimitCalculator;
 use OnaOnbir\Subscription\Support\ModelResolver;
 use OnaOnbir\Subscription\Support\ResetDateCalculator;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
 class RecordFeatureUsage
 {
@@ -78,7 +78,7 @@ class RecordFeatureUsage
 
             ModelResolver::featureUsage()::query()
                 ->where('id', $usage->id)
-                ->update(['used' => DB::raw('used + ' . (int) $amount)]);
+                ->update(['used' => DB::raw('used + '.(int) $amount)]);
 
             $usage->refresh();
 

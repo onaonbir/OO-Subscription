@@ -2,6 +2,8 @@
 
 namespace OnaOnbir\Subscription\Concerns;
 
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use OnaOnbir\Subscription\Actions\CreateSubscription;
 use OnaOnbir\Subscription\Actions\RecordFeatureUsage;
 use OnaOnbir\Subscription\Enums\FeatureType;
@@ -12,8 +14,6 @@ use OnaOnbir\Subscription\Models\SubscribableFeature;
 use OnaOnbir\Subscription\Models\Subscription;
 use OnaOnbir\Subscription\Support\FeatureLimitCalculator;
 use OnaOnbir\Subscription\Support\ModelResolver;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 trait HasSubscriptions
 {

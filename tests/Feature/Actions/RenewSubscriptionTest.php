@@ -1,14 +1,15 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Support\Facades\Event;
 use OnaOnbir\Subscription\Actions\CreateSubscription;
 use OnaOnbir\Subscription\Actions\RenewSubscription;
 use OnaOnbir\Subscription\Enums\SubscriptionStatus;
 use OnaOnbir\Subscription\Events\SubscriptionExpired;
 use OnaOnbir\Subscription\Events\SubscriptionRenewed;
+use OnaOnbir\Subscription\Exceptions\InvalidSubscriptionStateException;
 use OnaOnbir\Subscription\Models\Plan;
 use OnaOnbir\Subscription\Support\PlanSnapshotBuilder;
-use Illuminate\Support\Facades\Event;
 
 beforeEach(function () {
     $this->snapshotBuilder = new PlanSnapshotBuilder;
@@ -69,13 +70,13 @@ it('throws exception when renewing expired subscription', function () {
     $this->subscription->update(['status' => SubscriptionStatus::Expired]);
 
     $this->renewAction->handle($this->subscription);
-})->throws(\OnaOnbir\Subscription\Exceptions\InvalidSubscriptionStateException::class, 'Cannot renew subscription with status: expired');
+})->throws(InvalidSubscriptionStateException::class, 'Cannot renew subscription with status: expired');
 
 it('throws exception when renewing canceled subscription', function () {
     $this->subscription->update(['status' => SubscriptionStatus::Canceled, 'canceled_at' => now()]);
 
     $this->renewAction->handle($this->subscription);
-})->throws(\OnaOnbir\Subscription\Exceptions\InvalidSubscriptionStateException::class, 'Cannot renew subscription with status: canceled');
+})->throws(InvalidSubscriptionStateException::class, 'Cannot renew subscription with status: canceled');
 
 it('handles lifetime subscription renewal correctly', function () {
     $lifetimePlan = Plan::factory()->lifetime()->create(['prices' => ['TRY' => 299900]]);

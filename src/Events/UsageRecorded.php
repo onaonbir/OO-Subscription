@@ -2,10 +2,10 @@
 
 namespace OnaOnbir\Subscription\Events;
 
-use OnaOnbir\Subscription\Models\UsageRecord;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use OnaOnbir\Subscription\Models\UsageRecord;
 
 class UsageRecorded
 {

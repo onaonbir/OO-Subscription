@@ -1,9 +1,11 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use OnaOnbir\Subscription\Actions\CreateSubscription;
 use OnaOnbir\Subscription\Actions\RecordFeatureUsage;
-use OnaOnbir\Subscription\Concerns\HasSubscriptions;
+use OnaOnbir\Subscription\Events\BillingCycleCompleted;
 use OnaOnbir\Subscription\Events\FeatureLimitReached;
 use OnaOnbir\Subscription\Events\UsageRecorded;
 use OnaOnbir\Subscription\Exceptions\FeatureLimitExceededException;
@@ -11,8 +13,8 @@ use OnaOnbir\Subscription\Models\Feature;
 use OnaOnbir\Subscription\Models\FeatureUsage;
 use OnaOnbir\Subscription\Models\Plan;
 use OnaOnbir\Subscription\Models\SubscribableFeature;
+use OnaOnbir\Subscription\Models\UsageRecord;
 use OnaOnbir\Subscription\Support\PlanSnapshotBuilder;
-use Illuminate\Support\Facades\Event;
 
 beforeEach(function () {
     $this->action = new RecordFeatureUsage;
@@ -38,7 +40,7 @@ it('records usage and increments counter', function () {
 it('creates a usage record for audit trail', function () {
     $this->action->handle($this->user, 'api-requests', 5, ['endpoint' => '/api/data']);
 
-    $record = $this->user->morphMany(\OnaOnbir\Subscription\Models\UsageRecord::class, 'subscribable')->first();
+    $record = $this->user->morphMany(UsageRecord::class, 'subscribable')->first();
 
     expect($record)->not->toBeNull()
         ->and($record->amount)->toBe(5)
@@ -121,7 +123,7 @@ it('combines plan and direct feature limits', function () {
 });
 
 it('resets usage when period expires', function () {
-    Event::fake([\OnaOnbir\Subscription\Events\BillingCycleCompleted::class]);
+    Event::fake([BillingCycleCompleted::class]);
 
     $usage = FeatureUsage::create([
         'subscribable_type' => $this->user->getMorphClass(),
@@ -135,33 +137,33 @@ it('resets usage when period expires', function () {
 
     expect($result->used)->toBe(5);
 
-    Event::assertDispatched(\OnaOnbir\Subscription\Events\BillingCycleCompleted::class);
+    Event::assertDispatched(BillingCycleCompleted::class);
 });
 
 it('throws exception for negative amount', function () {
     $this->action->handle($this->user, 'api-requests', -5);
-})->throws(\InvalidArgumentException::class, 'Usage amount must be at least 1.');
+})->throws(InvalidArgumentException::class, 'Usage amount must be at least 1.');
 
 it('throws exception for zero amount', function () {
     $this->action->handle($this->user, 'api-requests', 0);
-})->throws(\InvalidArgumentException::class, 'Usage amount must be at least 1.');
+})->throws(InvalidArgumentException::class, 'Usage amount must be at least 1.');
 
 it('throws exception for boolean feature usage', function () {
     $boolFeature = Feature::factory()->boolean()->create(['code' => 'priority-support']);
     $this->plan->features()->attach($boolFeature, ['value' => 'true']);
 
     $this->action->handle($this->user, 'priority-support', 1);
-})->throws(\InvalidArgumentException::class, 'Cannot record usage for boolean feature [priority-support].');
+})->throws(InvalidArgumentException::class, 'Cannot record usage for boolean feature [priority-support].');
 
 it('throws exception for non-existent feature', function () {
     $this->action->handle($this->user, 'nonexistent-feature', 1);
-})->throws(\InvalidArgumentException::class, 'Feature [nonexistent-feature] not found.');
+})->throws(InvalidArgumentException::class, 'Feature [nonexistent-feature] not found.');
 
 it('handles concurrent usage recording atomically', function () {
     $this->action->handle($this->user, 'api-requests', 95);
 
     try {
-        \Illuminate\Support\Facades\DB::transaction(function () {
+        DB::transaction(function () {
             $this->action->handle($this->user, 'api-requests', 10);
         });
     } catch (FeatureLimitExceededException) {

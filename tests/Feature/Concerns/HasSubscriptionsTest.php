@@ -1,9 +1,7 @@
 <?php
 
 use App\Models\User;
-use OnaOnbir\Subscription\Concerns\HasSubscriptions;
 use OnaOnbir\Subscription\Enums\BillingInterval;
-use OnaOnbir\Subscription\Enums\SubscriptionStatus;
 use OnaOnbir\Subscription\Models\Feature;
 use OnaOnbir\Subscription\Models\Plan;
 use OnaOnbir\Subscription\Models\SubscribableFeature;

@@ -2,8 +2,8 @@
 
 namespace OnaOnbir\Subscription;
 
-use OnaOnbir\Subscription\Contracts\PaymentGateway;
 use Illuminate\Support\ServiceProvider;
+use OnaOnbir\Subscription\Contracts\PaymentGateway;
 
 class SubscriptionServiceProvider extends ServiceProvider
 {

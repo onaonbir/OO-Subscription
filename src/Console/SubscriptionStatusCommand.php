@@ -2,9 +2,9 @@
 
 namespace OnaOnbir\Subscription\Console;
 
+use Illuminate\Console\Command;
 use OnaOnbir\Subscription\Enums\SubscriptionStatus;
 use OnaOnbir\Subscription\Support\ModelResolver;
-use Illuminate\Console\Command;
 
 class SubscriptionStatusCommand extends Command
 {

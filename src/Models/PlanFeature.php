@@ -2,10 +2,10 @@
 
 namespace OnaOnbir\Subscription\Models;
 
-use OnaOnbir\Subscription\Support\ModelResolver;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use OnaOnbir\Subscription\Support\ModelResolver;
 
 class PlanFeature extends Pivot
 {

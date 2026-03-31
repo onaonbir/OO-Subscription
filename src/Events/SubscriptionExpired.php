@@ -2,9 +2,9 @@
 
 namespace OnaOnbir\Subscription\Events;
 
-use OnaOnbir\Subscription\Models\Subscription;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use OnaOnbir\Subscription\Models\Subscription;
 
 class SubscriptionExpired
 {
