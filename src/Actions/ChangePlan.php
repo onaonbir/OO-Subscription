@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Subscription\Actions;
+namespace OnaOnbir\Subscription\Actions;
 
-use App\Subscription\Enums\BillingInterval;
-use App\Subscription\Enums\SubscriptionStatus;
-use App\Subscription\Events\PlanChanged;
-use App\Subscription\Events\SubscriptionCanceled;
-use App\Subscription\Exceptions\InvalidSubscriptionStateException;
-use App\Subscription\Models\Plan;
-use App\Subscription\Models\Subscription;
-use App\Subscription\Support\ModelResolver;
-use App\Subscription\Support\PlanSnapshotBuilder;
+use OnaOnbir\Subscription\Enums\SubscriptionStatus;
+use OnaOnbir\Subscription\Events\PlanChanged;
+use OnaOnbir\Subscription\Events\SubscriptionCanceled;
+use OnaOnbir\Subscription\Exceptions\InvalidSubscriptionStateException;
+use OnaOnbir\Subscription\Models\Plan;
+use OnaOnbir\Subscription\Models\Subscription;
+use OnaOnbir\Subscription\Support\ModelResolver;
+use OnaOnbir\Subscription\Support\PlanSnapshotBuilder;
 
 class ChangePlan
 {
@@ -30,16 +29,11 @@ class ChangePlan
         }
 
         $oldPlan = $subscription->plan;
-        $currency = $currency ?? $subscription->plan_snapshot['price']['currency'] ?? config('subscription.default_currency', 'TRY');
+        $currency = $subscription->resolveCurrency($currency);
         $snapshot = $this->snapshotBuilder->build($newPlan, $currency);
 
         $now = now();
-
-        $endsAt = match ($newPlan->billing_interval) {
-            BillingInterval::Monthly => $now->copy()->addMonth(),
-            BillingInterval::Yearly => $now->copy()->addYear(),
-            BillingInterval::Lifetime => null,
-        };
+        $endsAt = $newPlan->billing_interval->addToDate($now);
 
         $subscription->update([
             'status' => SubscriptionStatus::Canceled,

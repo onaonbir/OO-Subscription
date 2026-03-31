@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Subscription\Enums;
+namespace OnaOnbir\Subscription\Enums;
 
 enum FeatureType: string
 {

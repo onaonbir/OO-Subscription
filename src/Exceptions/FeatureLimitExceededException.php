@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Subscription\Exceptions;
+namespace OnaOnbir\Subscription\Exceptions;
 
 use Exception;
 

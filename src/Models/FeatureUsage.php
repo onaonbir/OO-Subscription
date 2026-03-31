@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Subscription\Models;
+namespace OnaOnbir\Subscription\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Model;

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Subscription\Models;
+namespace OnaOnbir\Subscription\Models;
 
-use App\Subscription\Database\Factories\SubscriptionFactory;
-use App\Subscription\Enums\SubscriptionStatus;
-use App\Subscription\Support\ModelResolver;
+use OnaOnbir\Subscription\Database\Factories\SubscriptionFactory;
+use OnaOnbir\Subscription\Enums\SubscriptionStatus;
+use OnaOnbir\Subscription\Support\ModelResolver;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -83,11 +83,7 @@ class Subscription extends Model
 
     public function isValid(): bool
     {
-        return in_array($this->status, [
-            SubscriptionStatus::Active,
-            SubscriptionStatus::Trialing,
-            SubscriptionStatus::PastDue,
-        ]);
+        return in_array($this->status, SubscriptionStatus::activeStatuses());
     }
 
     public function onTrial(): bool
@@ -108,5 +104,12 @@ class Subscription extends Model
     public function isLifetime(): bool
     {
         return $this->ends_at === null && $this->isActive();
+    }
+
+    public function resolveCurrency(?string $override = null): string
+    {
+        return $override
+            ?? $this->plan_snapshot['price']['currency']
+            ?? config('subscription.default_currency', 'TRY');
     }
 }

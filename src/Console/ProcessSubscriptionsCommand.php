@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Subscription\Console;
+namespace OnaOnbir\Subscription\Console;
 
-use App\Subscription\Actions\CancelSubscription;
-use App\Subscription\Enums\SubscriptionStatus;
-use App\Subscription\Events\BillingCycleCompleted;
-use App\Subscription\Events\SubscriptionActivated;
-use App\Subscription\Events\SubscriptionExpired;
-use App\Subscription\Support\ModelResolver;
+use OnaOnbir\Subscription\Actions\CancelSubscription;
+use OnaOnbir\Subscription\Enums\SubscriptionStatus;
+use OnaOnbir\Subscription\Events\BillingCycleCompleted;
+use OnaOnbir\Subscription\Events\SubscriptionActivated;
+use OnaOnbir\Subscription\Events\SubscriptionExpired;
+use OnaOnbir\Subscription\Support\ModelResolver;
+use OnaOnbir\Subscription\Support\ResetDateCalculator;
 use Illuminate\Console\Command;
 
 class ProcessSubscriptionsCommand extends Command
@@ -178,10 +179,17 @@ class ProcessSubscriptionsCommand extends Command
         $featureUsageClass = ModelResolver::featureUsage();
 
         $featureUsageClass::query()
+            ->with('subscribable')
             ->whereNotNull('resets_at')
             ->where('resets_at', '<', now())
             ->where('used', '>', 0)
             ->chunkById(100, function ($usages) use ($isDryRun) {
+                $featureCodes = $usages->pluck('feature_code')->unique();
+                $features = ModelResolver::feature()::query()
+                    ->whereIn('code', $featureCodes)
+                    ->get()
+                    ->keyBy('code');
+
                 foreach ($usages as $usage) {
                     $this->processed++;
 
@@ -202,7 +210,10 @@ class ProcessSubscriptionsCommand extends Command
                         continue;
                     }
 
-                    $newResetsAt = $this->calculateNextResetDate($subscribable, $usage->feature_code);
+                    $feature = $features->get($usage->feature_code);
+                    $newResetsAt = $feature
+                        ? ResetDateCalculator::calculate($subscribable, $feature)
+                        : null;
 
                     $usedBeforeReset = $usage->used;
 
@@ -222,24 +233,5 @@ class ProcessSubscriptionsCommand extends Command
                     );
                 }
             });
-    }
-
-    private function calculateNextResetDate(?\Illuminate\Database\Eloquent\Model $subscribable, string $featureCode): ?\Carbon\Carbon
-    {
-        $feature = ModelResolver::feature()::query()->where('code', $featureCode)->first();
-
-        if (! $feature || ! $feature->resettable) {
-            return null;
-        }
-
-        if ($subscribable && method_exists($subscribable, 'activeSubscriptions')) {
-            $activeSubscription = $subscribable->activeSubscriptions()->first();
-
-            if ($activeSubscription && $activeSubscription->ends_at) {
-                return $activeSubscription->ends_at;
-            }
-        }
-
-        return now()->addMonth();
     }
 }

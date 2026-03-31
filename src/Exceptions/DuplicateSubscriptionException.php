@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Subscription\Exceptions;
+namespace OnaOnbir\Subscription\Exceptions;
 
-use App\Subscription\Models\Plan;
+use OnaOnbir\Subscription\Models\Plan;
 use Exception;
 
 class DuplicateSubscriptionException extends Exception

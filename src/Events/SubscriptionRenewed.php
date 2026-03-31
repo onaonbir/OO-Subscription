@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Subscription\Events;
+namespace OnaOnbir\Subscription\Events;
 
-use App\Subscription\Models\Subscription;
+use OnaOnbir\Subscription\Models\Subscription;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Subscription\Database\Factories;
+namespace OnaOnbir\Subscription\Database\Factories;
 
-use App\Subscription\Enums\BillingInterval;
-use App\Subscription\Models\Plan;
+use OnaOnbir\Subscription\Enums\BillingInterval;
+use OnaOnbir\Subscription\Models\Plan;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

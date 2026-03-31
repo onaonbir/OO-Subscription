@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Subscription\Models;
+namespace OnaOnbir\Subscription\Models;
 
-use App\Subscription\Database\Factories\PlanFactory;
-use App\Subscription\Enums\BillingInterval;
-use App\Subscription\Support\ModelResolver;
+use OnaOnbir\Subscription\Database\Factories\PlanFactory;
+use OnaOnbir\Subscription\Enums\BillingInterval;
+use OnaOnbir\Subscription\Support\ModelResolver;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

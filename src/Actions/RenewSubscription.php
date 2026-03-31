@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Subscription\Actions;
+namespace OnaOnbir\Subscription\Actions;
 
-use App\Subscription\Enums\BillingInterval;
-use App\Subscription\Enums\SubscriptionStatus;
-use App\Subscription\Events\SubscriptionExpired;
-use App\Subscription\Events\SubscriptionRenewed;
-use App\Subscription\Exceptions\InvalidSubscriptionStateException;
-use App\Subscription\Models\Subscription;
-use App\Subscription\Support\ModelResolver;
-use App\Subscription\Support\PlanSnapshotBuilder;
+use OnaOnbir\Subscription\Enums\SubscriptionStatus;
+use OnaOnbir\Subscription\Events\SubscriptionExpired;
+use OnaOnbir\Subscription\Events\SubscriptionRenewed;
+use OnaOnbir\Subscription\Exceptions\InvalidSubscriptionStateException;
+use OnaOnbir\Subscription\Models\Subscription;
+use OnaOnbir\Subscription\Support\ModelResolver;
+use OnaOnbir\Subscription\Support\PlanSnapshotBuilder;
 
 class RenewSubscription
 {
@@ -24,17 +23,11 @@ class RenewSubscription
         }
 
         $plan = $subscription->plan;
-        $currency = $currency ?? $subscription->plan_snapshot['price']['currency'] ?? config('subscription.default_currency', 'TRY');
+        $currency = $subscription->resolveCurrency($currency);
         $snapshot = $this->snapshotBuilder->build($plan, $currency);
 
-        $now = now();
-        $startsAt = $subscription->ends_at ?? $now;
-
-        $endsAt = match ($plan->billing_interval) {
-            BillingInterval::Monthly => $startsAt->copy()->addMonth(),
-            BillingInterval::Yearly => $startsAt->copy()->addYear(),
-            BillingInterval::Lifetime => null,
-        };
+        $startsAt = $subscription->ends_at ?? now();
+        $endsAt = $plan->billing_interval->addToDate($startsAt);
 
         $subscription->update(['status' => SubscriptionStatus::Expired]);
         SubscriptionExpired::dispatch($subscription);

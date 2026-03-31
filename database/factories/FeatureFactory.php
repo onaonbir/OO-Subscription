@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Subscription\Database\Factories;
+namespace OnaOnbir\Subscription\Database\Factories;
 
-use App\Subscription\Enums\FeatureType;
-use App\Subscription\Models\Feature;
+use OnaOnbir\Subscription\Enums\FeatureType;
+use OnaOnbir\Subscription\Models\Feature;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

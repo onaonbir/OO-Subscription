@@ -1,10 +1,10 @@
 <?php
 
-use App\Subscription\Enums\BillingInterval;
-use App\Subscription\Enums\FeatureType;
-use App\Subscription\Models\Feature;
-use App\Subscription\Models\Plan;
-use App\Subscription\Support\PlanSnapshotBuilder;
+use OnaOnbir\Subscription\Enums\BillingInterval;
+use OnaOnbir\Subscription\Enums\FeatureType;
+use OnaOnbir\Subscription\Models\Feature;
+use OnaOnbir\Subscription\Models\Plan;
+use OnaOnbir\Subscription\Support\PlanSnapshotBuilder;
 
 beforeEach(function () {
     $this->builder = new PlanSnapshotBuilder;

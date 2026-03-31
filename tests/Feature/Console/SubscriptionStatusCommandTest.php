@@ -1,9 +1,9 @@
 <?php
 
 use App\Models\User;
-use App\Subscription\Enums\SubscriptionStatus;
-use App\Subscription\Models\FeatureUsage;
-use App\Subscription\Models\Subscription;
+use OnaOnbir\Subscription\Enums\SubscriptionStatus;
+use OnaOnbir\Subscription\Models\FeatureUsage;
+use OnaOnbir\Subscription\Models\Subscription;
 
 it('displays correct status counts', function () {
     Subscription::factory()->count(3)->create(['status' => SubscriptionStatus::Active]);

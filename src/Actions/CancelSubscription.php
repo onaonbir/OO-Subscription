@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Subscription\Actions;
+namespace OnaOnbir\Subscription\Actions;
 
-use App\Subscription\Enums\SubscriptionStatus;
-use App\Subscription\Events\SubscriptionCanceled;
-use App\Subscription\Exceptions\InvalidSubscriptionStateException;
-use App\Subscription\Models\Subscription;
+use OnaOnbir\Subscription\Enums\SubscriptionStatus;
+use OnaOnbir\Subscription\Events\SubscriptionCanceled;
+use OnaOnbir\Subscription\Exceptions\InvalidSubscriptionStateException;
+use OnaOnbir\Subscription\Models\Subscription;
 
 class CancelSubscription
 {

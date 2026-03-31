@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Subscription\Models;
+namespace OnaOnbir\Subscription\Models;
 
-use App\Subscription\Database\Factories\FeatureFactory;
-use App\Subscription\Enums\FeatureType;
-use App\Subscription\Support\ModelResolver;
+use OnaOnbir\Subscription\Database\Factories\FeatureFactory;
+use OnaOnbir\Subscription\Enums\FeatureType;
+use OnaOnbir\Subscription\Support\ModelResolver;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

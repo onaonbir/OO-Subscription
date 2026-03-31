@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Subscription;
+namespace OnaOnbir\Subscription;
 
-use App\Subscription\Contracts\PaymentGateway;
+use OnaOnbir\Subscription\Contracts\PaymentGateway;
 use Illuminate\Support\ServiceProvider;
 
 class SubscriptionServiceProvider extends ServiceProvider
@@ -11,11 +11,15 @@ class SubscriptionServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/subscription.php', 'subscription');
 
-        $handler = config('subscription.gateway.handler');
+        $this->app->singleton(PaymentGateway::class, function ($app) {
+            $handler = config('subscription.gateway.handler');
 
-        if ($handler && class_exists($handler)) {
-            $this->app->singleton(PaymentGateway::class, fn ($app) => $app->make($handler));
-        }
+            if (! $handler || ! class_exists($handler)) {
+                throw new \RuntimeException('No payment gateway handler configured. Set subscription.gateway.handler in your config.');
+            }
+
+            return $app->make($handler);
+        });
     }
 
     public function boot(): void

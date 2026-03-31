@@ -1,16 +1,16 @@
 <?php
 
 use App\Models\User;
-use App\Subscription\Enums\BillingInterval;
-use App\Subscription\Enums\SubscriptionStatus;
-use App\Subscription\Events\BillingCycleCompleted;
-use App\Subscription\Events\SubscriptionActivated;
-use App\Subscription\Events\SubscriptionCanceled;
-use App\Subscription\Events\SubscriptionExpired;
-use App\Subscription\Models\Feature;
-use App\Subscription\Models\FeatureUsage;
-use App\Subscription\Models\Plan;
-use App\Subscription\Models\Subscription;
+use OnaOnbir\Subscription\Enums\BillingInterval;
+use OnaOnbir\Subscription\Enums\SubscriptionStatus;
+use OnaOnbir\Subscription\Events\BillingCycleCompleted;
+use OnaOnbir\Subscription\Events\SubscriptionActivated;
+use OnaOnbir\Subscription\Events\SubscriptionCanceled;
+use OnaOnbir\Subscription\Events\SubscriptionExpired;
+use OnaOnbir\Subscription\Models\Feature;
+use OnaOnbir\Subscription\Models\FeatureUsage;
+use OnaOnbir\Subscription\Models\Plan;
+use OnaOnbir\Subscription\Models\Subscription;
 use Illuminate\Support\Facades\Event;
 
 it('expires active subscriptions past ends_at', function () {

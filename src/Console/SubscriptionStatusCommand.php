@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Subscription\Console;
+namespace OnaOnbir\Subscription\Console;
 
-use App\Subscription\Enums\SubscriptionStatus;
-use App\Subscription\Support\ModelResolver;
+use OnaOnbir\Subscription\Enums\SubscriptionStatus;
+use OnaOnbir\Subscription\Support\ModelResolver;
 use Illuminate\Console\Command;
 
 class SubscriptionStatusCommand extends Command

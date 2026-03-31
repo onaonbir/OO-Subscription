@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Subscription\Contracts;
+namespace OnaOnbir\Subscription\Contracts;
 
-use App\Subscription\Models\Subscription;
+use OnaOnbir\Subscription\Models\Subscription;
 
 interface PaymentGateway
 {

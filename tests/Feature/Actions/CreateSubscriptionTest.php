@@ -1,14 +1,14 @@
 <?php
 
 use App\Models\User;
-use App\Subscription\Actions\CreateSubscription;
-use App\Subscription\Enums\BillingInterval;
-use App\Subscription\Enums\SubscriptionStatus;
-use App\Subscription\Events\SubscriptionActivated;
-use App\Subscription\Events\SubscriptionCreated;
-use App\Subscription\Models\Feature;
-use App\Subscription\Models\Plan;
-use App\Subscription\Support\PlanSnapshotBuilder;
+use OnaOnbir\Subscription\Actions\CreateSubscription;
+use OnaOnbir\Subscription\Enums\BillingInterval;
+use OnaOnbir\Subscription\Enums\SubscriptionStatus;
+use OnaOnbir\Subscription\Events\SubscriptionActivated;
+use OnaOnbir\Subscription\Events\SubscriptionCreated;
+use OnaOnbir\Subscription\Models\Feature;
+use OnaOnbir\Subscription\Models\Plan;
+use OnaOnbir\Subscription\Support\PlanSnapshotBuilder;
 use Illuminate\Support\Facades\Event;
 
 beforeEach(function () {
@@ -119,4 +119,4 @@ it('throws exception when subscribing to same plan twice', function () {
 
     $this->action->handle($user, $plan, 'TRY');
     $this->action->handle($user, $plan, 'TRY');
-})->throws(\App\Subscription\Exceptions\DuplicateSubscriptionException::class);
+})->throws(\OnaOnbir\Subscription\Exceptions\DuplicateSubscriptionException::class);

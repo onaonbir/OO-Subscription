@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Subscription\Actions;
+namespace OnaOnbir\Subscription\Actions;
 
-use App\Subscription\Enums\FeatureType;
-use App\Subscription\Events\BillingCycleCompleted;
-use App\Subscription\Events\FeatureLimitReached;
-use App\Subscription\Events\UsageRecorded;
-use App\Subscription\Exceptions\FeatureLimitExceededException;
-use App\Subscription\Models\Feature;
-use App\Subscription\Models\FeatureUsage;
-use App\Subscription\Models\UsageRecord;
-use App\Subscription\Support\FeatureLimitCalculator;
-use App\Subscription\Support\ModelResolver;
+use OnaOnbir\Subscription\Enums\FeatureType;
+use OnaOnbir\Subscription\Events\BillingCycleCompleted;
+use OnaOnbir\Subscription\Events\FeatureLimitReached;
+use OnaOnbir\Subscription\Events\UsageRecorded;
+use OnaOnbir\Subscription\Exceptions\FeatureLimitExceededException;
+use OnaOnbir\Subscription\Models\Feature;
+use OnaOnbir\Subscription\Models\FeatureUsage;
+use OnaOnbir\Subscription\Support\FeatureLimitCalculator;
+use OnaOnbir\Subscription\Support\ModelResolver;
+use OnaOnbir\Subscription\Support\ResetDateCalculator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -49,7 +49,7 @@ class RecordFeatureUsage
                     'feature_code' => $featureCode,
                 ], [
                     'used' => 0,
-                    'resets_at' => $this->calculateResetDate($subscribable, $feature),
+                    'resets_at' => ResetDateCalculator::calculate($subscribable, $feature),
                 ]);
 
             if ($usage->isExpired()) {
@@ -97,30 +97,13 @@ class RecordFeatureUsage
         });
     }
 
-    private function calculateResetDate(Model $subscribable, Feature $feature): ?\Carbon\Carbon
-    {
-        if (! $feature->resettable) {
-            return null;
-        }
-
-        if (method_exists($subscribable, 'activeSubscriptions')) {
-            $activeSubscription = $subscribable->activeSubscriptions()->first();
-
-            if ($activeSubscription && $activeSubscription->ends_at) {
-                return $activeSubscription->ends_at;
-            }
-        }
-
-        return now()->addMonth();
-    }
-
     private function handleCycleReset(FeatureUsage $usage, Model $subscribable, Feature $feature): void
     {
         $usedBeforeReset = $usage->used;
 
         $usage->update([
             'used' => 0,
-            'resets_at' => $this->calculateResetDate($subscribable, $feature),
+            'resets_at' => ResetDateCalculator::calculate($subscribable, $feature),
         ]);
 
         BillingCycleCompleted::dispatch(

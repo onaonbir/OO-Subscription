@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Subscription\Events;
+namespace OnaOnbir\Subscription\Events;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Events\Dispatchable;

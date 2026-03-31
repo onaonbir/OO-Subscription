@@ -1,22 +1,25 @@
 <?php
 
-namespace App\Subscription\Concerns;
+namespace OnaOnbir\Subscription\Concerns;
 
-use App\Subscription\Actions\CreateSubscription;
-use App\Subscription\Actions\RecordFeatureUsage;
-use App\Subscription\Enums\FeatureType;
-use App\Subscription\Enums\SubscriptionStatus;
-use App\Subscription\Models\FeatureUsage;
-use App\Subscription\Models\Plan;
-use App\Subscription\Models\SubscribableFeature;
-use App\Subscription\Models\Subscription;
-use App\Subscription\Support\FeatureLimitCalculator;
-use App\Subscription\Support\ModelResolver;
+use OnaOnbir\Subscription\Actions\CreateSubscription;
+use OnaOnbir\Subscription\Actions\RecordFeatureUsage;
+use OnaOnbir\Subscription\Enums\FeatureType;
+use OnaOnbir\Subscription\Enums\SubscriptionStatus;
+use OnaOnbir\Subscription\Models\FeatureUsage;
+use OnaOnbir\Subscription\Models\Plan;
+use OnaOnbir\Subscription\Models\SubscribableFeature;
+use OnaOnbir\Subscription\Models\Subscription;
+use OnaOnbir\Subscription\Support\FeatureLimitCalculator;
+use OnaOnbir\Subscription\Support\ModelResolver;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 trait HasSubscriptions
 {
+    /** @var Collection<int, Subscription>|null */
+    private ?Collection $cachedActiveSubscriptions = null;
+
     public function subscriptions(): MorphMany
     {
         return $this->morphMany(Subscription::class, 'subscribable');
@@ -27,23 +30,20 @@ trait HasSubscriptions
      */
     public function activeSubscriptions(): Collection
     {
-        return $this->subscriptions()
-            ->whereIn('status', [
-                SubscriptionStatus::Active,
-                SubscriptionStatus::Trialing,
-                SubscriptionStatus::PastDue,
-            ])
+        return $this->cachedActiveSubscriptions ??= $this->subscriptions()
+            ->whereIn('status', SubscriptionStatus::activeStatuses())
             ->get();
+    }
+
+    public function clearSubscriptionCache(): void
+    {
+        $this->cachedActiveSubscriptions = null;
     }
 
     public function subscription(?Plan $plan = null): ?Subscription
     {
         $query = $this->subscriptions()
-            ->whereIn('status', [
-                SubscriptionStatus::Active,
-                SubscriptionStatus::Trialing,
-                SubscriptionStatus::PastDue,
-            ]);
+            ->whereIn('status', SubscriptionStatus::activeStatuses());
 
         if ($plan) {
             $query->where('plan_id', $plan->id);
@@ -81,13 +81,17 @@ trait HasSubscriptions
         ?string $gateway = null,
         ?string $gatewaySubscriptionId = null,
     ): Subscription {
-        return app(CreateSubscription::class)->handle(
+        $subscription = app(CreateSubscription::class)->handle(
             $this,
             $plan,
             $currency,
             $gateway,
             $gatewaySubscriptionId,
         );
+
+        $this->clearSubscriptionCache();
+
+        return $subscription;
     }
 
     public function subscribableFeatures(): MorphMany
@@ -111,12 +115,9 @@ trait HasSubscriptions
             }
         }
 
-        $now = now();
-
         return $this->subscribableFeatures()
             ->whereHas('feature', fn ($query) => $query->where('code', $code))
-            ->where('valid_from', '<=', $now)
-            ->where(fn ($query) => $query->whereNull('valid_until')->orWhere('valid_until', '>', $now))
+            ->currentlyValid()
             ->exists();
     }
 

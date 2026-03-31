@@ -34,13 +34,13 @@ return [
     |
     */
     'models' => [
-        'plan' => \App\Subscription\Models\Plan::class,
-        'feature' => \App\Subscription\Models\Feature::class,
-        'subscription' => \App\Subscription\Models\Subscription::class,
-        'plan_feature' => \App\Subscription\Models\PlanFeature::class,
-        'subscribable_feature' => \App\Subscription\Models\SubscribableFeature::class,
-        'feature_usage' => \App\Subscription\Models\FeatureUsage::class,
-        'usage_record' => \App\Subscription\Models\UsageRecord::class,
+        'plan' => \OnaOnbir\Subscription\Models\Plan::class,
+        'feature' => \OnaOnbir\Subscription\Models\Feature::class,
+        'subscription' => \OnaOnbir\Subscription\Models\Subscription::class,
+        'plan_feature' => \OnaOnbir\Subscription\Models\PlanFeature::class,
+        'subscribable_feature' => \OnaOnbir\Subscription\Models\SubscribableFeature::class,
+        'feature_usage' => \OnaOnbir\Subscription\Models\FeatureUsage::class,
+        'usage_record' => \OnaOnbir\Subscription\Models\UsageRecord::class,
     ],
 
     /*

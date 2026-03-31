@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Subscription\Support;
+namespace OnaOnbir\Subscription\Support;
 
-use App\Subscription\Models\Plan;
+use OnaOnbir\Subscription\Models\Plan;
 
 class PlanSnapshotBuilder
 {

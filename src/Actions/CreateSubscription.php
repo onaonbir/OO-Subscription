@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Subscription\Actions;
+namespace OnaOnbir\Subscription\Actions;
 
-use App\Subscription\Enums\BillingInterval;
-use App\Subscription\Enums\SubscriptionStatus;
-use App\Subscription\Events\SubscriptionActivated;
-use App\Subscription\Events\SubscriptionCreated;
-use App\Subscription\Exceptions\DuplicateSubscriptionException;
-use App\Subscription\Models\Plan;
-use App\Subscription\Models\Subscription;
-use App\Subscription\Support\ModelResolver;
-use App\Subscription\Support\PlanSnapshotBuilder;
+use OnaOnbir\Subscription\Enums\SubscriptionStatus;
+use OnaOnbir\Subscription\Events\SubscriptionActivated;
+use OnaOnbir\Subscription\Events\SubscriptionCreated;
+use OnaOnbir\Subscription\Exceptions\DuplicateSubscriptionException;
+use OnaOnbir\Subscription\Models\Plan;
+use OnaOnbir\Subscription\Models\Subscription;
+use OnaOnbir\Subscription\Support\ModelResolver;
+use OnaOnbir\Subscription\Support\PlanSnapshotBuilder;
 use Illuminate\Database\Eloquent\Model;
 
 class CreateSubscription
@@ -30,11 +29,7 @@ class CreateSubscription
             ->where('subscribable_type', $subscribable->getMorphClass())
             ->where('subscribable_id', $subscribable->getKey())
             ->where('plan_id', $plan->id)
-            ->whereIn('status', [
-                SubscriptionStatus::Active,
-                SubscriptionStatus::Trialing,
-                SubscriptionStatus::PastDue,
-            ])
+            ->whereIn('status', SubscriptionStatus::activeStatuses())
             ->exists();
 
         if ($existingActive) {
@@ -46,16 +41,8 @@ class CreateSubscription
 
         $now = now();
         $hasTrial = $plan->trial_days > 0;
-
-        $endsAt = match ($plan->billing_interval) {
-            BillingInterval::Monthly => $hasTrial
-                ? $now->copy()->addDays($plan->trial_days)->addMonth()
-                : $now->copy()->addMonth(),
-            BillingInterval::Yearly => $hasTrial
-                ? $now->copy()->addDays($plan->trial_days)->addYear()
-                : $now->copy()->addYear(),
-            BillingInterval::Lifetime => null,
-        };
+        $startsAt = $hasTrial ? $now->copy()->addDays($plan->trial_days) : $now;
+        $endsAt = $plan->billing_interval->addToDate($startsAt);
 
         $subscriptionClass = ModelResolver::subscription();
         $subscription = $subscriptionClass::query()->create([

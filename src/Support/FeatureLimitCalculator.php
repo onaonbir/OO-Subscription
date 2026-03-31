@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Subscription\Support;
+namespace OnaOnbir\Subscription\Support;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -46,12 +46,10 @@ class FeatureLimitCalculator
         }
 
         $total = null;
-        $now = now();
 
         $directFeatures = $subscribable->subscribableFeatures()
             ->whereHas('feature', fn ($query) => $query->where('code', $code))
-            ->where('valid_from', '<=', $now)
-            ->where(fn ($query) => $query->whereNull('valid_until')->orWhere('valid_until', '>', $now))
+            ->currentlyValid()
             ->get();
 
         foreach ($directFeatures as $directFeature) {
@@ -78,12 +76,9 @@ class FeatureLimitCalculator
         }
 
         if (method_exists($subscribable, 'subscribableFeatures')) {
-            $now = now();
-
             $hasOverage = $subscribable->subscribableFeatures()
                 ->whereHas('feature', fn ($query) => $query->where('code', $code))
-                ->where('valid_from', '<=', $now)
-                ->where(fn ($query) => $query->whereNull('valid_until')->orWhere('valid_until', '>', $now))
+                ->currentlyValid()
                 ->whereNotNull('overage_prices')
                 ->exists();
 

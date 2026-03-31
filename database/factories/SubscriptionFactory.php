@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Subscription\Database\Factories;
+namespace OnaOnbir\Subscription\Database\Factories;
 
-use App\Subscription\Enums\SubscriptionStatus;
-use App\Subscription\Models\Plan;
-use App\Subscription\Models\Subscription;
+use OnaOnbir\Subscription\Enums\SubscriptionStatus;
+use OnaOnbir\Subscription\Models\Plan;
+use OnaOnbir\Subscription\Models\Subscription;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

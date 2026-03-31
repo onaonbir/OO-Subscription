@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Subscription\Models;
+namespace OnaOnbir\Subscription\Models;
 
-use App\Subscription\Support\ModelResolver;
+use OnaOnbir\Subscription\Support\ModelResolver;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;

@@ -1,13 +1,13 @@
 <?php
 
 use App\Models\User;
-use App\Subscription\Concerns\HasSubscriptions;
-use App\Subscription\Enums\BillingInterval;
-use App\Subscription\Enums\SubscriptionStatus;
-use App\Subscription\Models\Feature;
-use App\Subscription\Models\Plan;
-use App\Subscription\Models\SubscribableFeature;
-use App\Subscription\Models\Subscription;
+use OnaOnbir\Subscription\Concerns\HasSubscriptions;
+use OnaOnbir\Subscription\Enums\BillingInterval;
+use OnaOnbir\Subscription\Enums\SubscriptionStatus;
+use OnaOnbir\Subscription\Models\Feature;
+use OnaOnbir\Subscription\Models\Plan;
+use OnaOnbir\Subscription\Models\SubscribableFeature;
+use OnaOnbir\Subscription\Models\Subscription;
 
 beforeEach(function () {
     $this->user = User::factory()->create();

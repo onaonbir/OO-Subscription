@@ -1,17 +1,17 @@
 <?php
 
 use App\Models\User;
-use App\Subscription\Actions\CreateSubscription;
-use App\Subscription\Actions\RecordFeatureUsage;
-use App\Subscription\Concerns\HasSubscriptions;
-use App\Subscription\Events\FeatureLimitReached;
-use App\Subscription\Events\UsageRecorded;
-use App\Subscription\Exceptions\FeatureLimitExceededException;
-use App\Subscription\Models\Feature;
-use App\Subscription\Models\FeatureUsage;
-use App\Subscription\Models\Plan;
-use App\Subscription\Models\SubscribableFeature;
-use App\Subscription\Support\PlanSnapshotBuilder;
+use OnaOnbir\Subscription\Actions\CreateSubscription;
+use OnaOnbir\Subscription\Actions\RecordFeatureUsage;
+use OnaOnbir\Subscription\Concerns\HasSubscriptions;
+use OnaOnbir\Subscription\Events\FeatureLimitReached;
+use OnaOnbir\Subscription\Events\UsageRecorded;
+use OnaOnbir\Subscription\Exceptions\FeatureLimitExceededException;
+use OnaOnbir\Subscription\Models\Feature;
+use OnaOnbir\Subscription\Models\FeatureUsage;
+use OnaOnbir\Subscription\Models\Plan;
+use OnaOnbir\Subscription\Models\SubscribableFeature;
+use OnaOnbir\Subscription\Support\PlanSnapshotBuilder;
 use Illuminate\Support\Facades\Event;
 
 beforeEach(function () {
@@ -38,7 +38,7 @@ it('records usage and increments counter', function () {
 it('creates a usage record for audit trail', function () {
     $this->action->handle($this->user, 'api-requests', 5, ['endpoint' => '/api/data']);
 
-    $record = $this->user->morphMany(\App\Subscription\Models\UsageRecord::class, 'subscribable')->first();
+    $record = $this->user->morphMany(\OnaOnbir\Subscription\Models\UsageRecord::class, 'subscribable')->first();
 
     expect($record)->not->toBeNull()
         ->and($record->amount)->toBe(5)
@@ -121,7 +121,7 @@ it('combines plan and direct feature limits', function () {
 });
 
 it('resets usage when period expires', function () {
-    Event::fake([\App\Subscription\Events\BillingCycleCompleted::class]);
+    Event::fake([\OnaOnbir\Subscription\Events\BillingCycleCompleted::class]);
 
     $usage = FeatureUsage::create([
         'subscribable_type' => $this->user->getMorphClass(),
@@ -135,7 +135,7 @@ it('resets usage when period expires', function () {
 
     expect($result->used)->toBe(5);
 
-    Event::assertDispatched(\App\Subscription\Events\BillingCycleCompleted::class);
+    Event::assertDispatched(\OnaOnbir\Subscription\Events\BillingCycleCompleted::class);
 });
 
 it('throws exception for negative amount', function () {
